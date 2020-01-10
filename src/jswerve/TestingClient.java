@@ -1,3 +1,5 @@
+package jswerve;
+
 import java.net.InetAddress;
 import java.net.Socket;
 import java.io.BufferedReader;
@@ -8,15 +10,16 @@ import java.net.InetAddress;
 public class TestingClient {
 
     public static void main(String[] args) throws Exception {
+    	System.out.println("Hello world!");
         int port = 8000;
-        String hostName = InetAddress.getLocalHost().toString();
+        String hostName = InetAddress.getLocalHost().getHostName();
 
         Socket s = new Socket(hostName, port);
         
         BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
         PrintWriter pr = new PrintWriter(s.getOutputStream(), true);
         
-        pr.println("testing... 123.... testing?");
+        pr.println("testing...");
 
         s.close();
     }
