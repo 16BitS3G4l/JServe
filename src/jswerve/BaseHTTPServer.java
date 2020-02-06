@@ -1,33 +1,28 @@
 package jswerve;
 
-import java.io.BufferedReader;
-import java.io.PrintWriter; 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Date;
+import java.util.ArrayList;
 
-public class BaseHTTPServer {
+public class BaseHTTPServer implements Runnable {
 	
     private int port = 80; 
-    private BufferedReader reader;
-    private PrintWriter writer;
     private ServerSocket ss;
     private Socket s;
-
-    public void initServerSocket() {
+    public static boolean isStopped = false;
+    
+    private void initServerSocket() {
         try { 
             ss = new ServerSocket(port);
         } catch(IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage()); // replace with logging utility
         } 
     }
 
-    public void acceptConectionsAndThrowToHandlers() throws InterruptedException {
+    private void acceptConectionsAndThrowToHandlers() {
         try {
-            while (true) {
+            while (!isStopped) {
                 s = ss.accept();
                 
                 (new Thread(new ConnectionHandler(s))).start();
@@ -38,26 +33,27 @@ public class BaseHTTPServer {
         }
     }
 
-    public BaseHTTPServer(int port) throws InterruptedException {
+    public BaseHTTPServer(int port) {
     	this.port = port;
-        initServerSocket();
-        try {
-			acceptConectionsAndThrowToHandlers();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
     }
-
-    public BaseHTTPServer() throws InterruptedException {
-        initServerSocket();
-        try {
-			acceptConectionsAndThrowToHandlers();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    
+    public void stop() {
+    	isStopped = true;
     }
+    
+    public void run() {
+    	initServerSocket();
+    	
+    	try {
+    		acceptConectionsAndThrowToHandlers();
+		} catch (Exception e) {
+			e.printStackTrace(); // replace with logging utility
+		}	
 
-
+    }
+    
+    public void setRoute(String route, RouteHandler rh) {
+    	
+    }
 }
+
