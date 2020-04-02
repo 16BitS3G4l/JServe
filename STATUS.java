@@ -1,4 +1,4 @@
-package jswerve;
+package main.java.jswerve;
 
 public enum STATUS {
 	OK, 
