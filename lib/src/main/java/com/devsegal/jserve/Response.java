@@ -1,4 +1,4 @@
-package main.java.jswerve;
+package com.devsegal.jserve;
 
 interface Response {
 	

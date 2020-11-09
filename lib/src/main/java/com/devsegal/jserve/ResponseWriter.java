@@ -1,4 +1,4 @@
-package main.java.jswerve;
+package com.devsegal.jserve;
 
 import java.io.PrintWriter;
 import java.io.OutputStream;
