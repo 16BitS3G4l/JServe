@@ -10,31 +10,31 @@ public class RequestParser {
     private String httpVersion = "";
     private HashMap<String, String> headers;
 
+    
     public RequestParser() {
-        headers = new HashMap<String, String>();
+        headers = new HashMap<>();
     }
 
-    public void parseReq(BufferedReader br) {
-            
+    public void parseRequest(BufferedReader reader) {
         try {
-            if(br.ready()) {
-                String[] arrOfStrings = br.readLine().split(" "); // should be the METHOD PATH HTTP VERSION 
+            if(reader.ready()) {
+                String[] firstLine = reader.readLine().split(" "); // should be the METHOD PATH HTTP VERSION 
                 
-                method = arrOfStrings[0];
-                path = arrOfStrings[1];
-                httpVersion = arrOfStrings[2];
+                method = firstLine[0];
+                path = firstLine[1];
+                httpVersion = firstLine[2];
             }
 
-            while(br.ready()) {
-                String str = br.readLine();
-                String[] header = str.split(":", 2);
+            while(reader.ready()) {
+                String line = reader.readLine();
+                String[] header = line.split(":", 2);
                 
                 if(header.length == 2) {
                     headers.put(header[0], header[1]);
                 }
             }
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
     }
     
