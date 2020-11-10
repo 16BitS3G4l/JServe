@@ -3,53 +3,54 @@ package com.devsegal.jserve;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.BufferedReader;
-import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.file.Files;
 import java.util.HashMap;
+import java.nio.file.Path;
+import java.util.function.Consumer;
 
-public class ConnectionHandler implements Runnable {
+class ConnectionHandler implements Runnable {
 
-	StringBuilder reqFullContents;
-    BufferedReader br; 
-    PrintWriter pw;
-    Socket conn;
+	StringBuilder requestContents;
+    BufferedReader reader; 
+	ResponseWriter responseWriter;
+	BufferedReader requestReader;
+    Socket connection;
+	HashMap<String, WebRouteHandler> routes;
+	String serverPath;
+	String contentType;
+	String responsePath;
 
-	public ConnectionHandler(Socket s) {	
-    	this.conn  = s;
+
+	public ConnectionHandler(Socket connection, HashMap<String, WebRouteHandler> routes, String serverPath) {	
+		this.connection  = connection;
+		this.routes = routes;
+		this.serverPath = serverPath;
+		this.requestContents = new StringBuilder();
+
+		try {
+			responseWriter = new ResponseWriter(connection.getOutputStream());
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			requestReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void run() {
-				try {
-					reqFullContents = new StringBuilder();
-					BufferedReader br = new BufferedReader( 
-						new InputStreamReader(conn.getInputStream()));
-					
-						// parse request 
-						RequestParser rp = new RequestParser();
-						rp.parseReq(br);
+				RequestParser requestParser = new RequestParser();
+				requestParser.parseRequest(requestReader);
 
-						
+				WebRouteHandler webRouteHandler = routes.get(requestParser.getPath() + requestParser.getMethod());
 
-					} catch (IOException e) {
-					
+				if(webRouteHandler == null) {
+					responseWriter.send(); // response to invalid requests  
+				} else {
+					webRouteHandler.handler(requestParser, responseWriter);	
 				}
-
-	            try {
-	    			pw = new PrintWriter(
-	    					conn.getOutputStream());
-	    		} catch (IOException e) {
-	    			e.printStackTrace();
-	    		}
-				
-				try {
-					ResponseWriter rw = new ResponseWriter(conn.getOutputStream());
-					rw.setConnectionType("close");
-					rw.setContentType("text/html");
-
-					rw.send();
-				} catch (IOException e) {
-
-				}
-
-	    }
+		}
 }
