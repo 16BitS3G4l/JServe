@@ -42,15 +42,15 @@ class ConnectionHandler implements Runnable {
 	}
 	
 	public void run() {
-				RequestParser requestParser = new RequestParser();
-				requestParser.parseRequest(requestReader);
+			RequestParser requestParser = new RequestParser();
+			requestParser.parseRequest(requestReader);
 
-				WebRouteHandler webRouteHandler = routes.get(requestParser.getPath() + requestParser.getMethod());
+			WebRouteHandler webRouteHandler = routes.get(requestParser.getPath() + requestParser.getMethod());
 
-				if(webRouteHandler == null) {
-					responseWriter.send(); // response to invalid requests  
-				} else {
-					webRouteHandler.handler(requestParser, responseWriter);	
-				}
+			if(webRouteHandler == null) {
+				responseWriter.send(); // response to invalid requests  
+			} else {
+				webRouteHandler.handler(requestParser, responseWriter);	
+			}
 		}
 }
