@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.nio.file.Path;
 
 public class BaseHTTPServer implements Runnable {
 
     private int port = 80; 
     private boolean isStopped = false;
-
-    private String serverPath  = ""; 
-
+    
+    private NotFoundPageHandler notFoundPageHandler;
+    private Path originalServerPath;  
     private ServerSocket server;
     private HashMap<String, WebRouteHandler> routesToHandlers;
     
@@ -20,9 +21,18 @@ public class BaseHTTPServer implements Runnable {
         routesToHandlers = new HashMap<>();
     }
     
-    public void setupOrigin(String path) {
-        serverPath = path;
+    public void setupOriginalServerPath(Path path) {
+        this.originalServerPath = path;
     }
+
+    public void setupOriginalServerPath(String path) {
+        setupOriginalServerPath(Path.of(path));
+    }
+
+    public void setupNotFoundPageHandler(NotFoundPageHandler notFoundPageHandler) {
+        this.notFoundPageHandler = notFoundPageHandler;
+    }
+
 
     public void route(String path, String method, WebRouteHandler handler) {
         routesToHandlers.put(path + method, handler);
@@ -36,35 +46,17 @@ public class BaseHTTPServer implements Runnable {
         } 
     }
     
-/* 
-    public void parseRoutes() {
-        File routesFile = new File(serverPath + "routes.txt");
-
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(routesFile));
-            String line;
-            String[] paths; 
-
-            while((line = reader.readLine()) != null) {
-                 paths = line.split(" ");
-                 routes.put(paths[0], paths[1]);
-            }
-
-            System.out.println(routes.toString());
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    } */
-
     private void acceptConectionsAndThrowToHandlers() {
         try {
             while (!isStopped) {
                 Socket connection = server.accept();
                 
-                (new Thread(new ConnectionHandler(connection, routesToHandlers, serverPath))).start();
+                if(originalServerPath != null) {
+                    (new Thread(new ConnectionHandler( new ConnectionHandlerConfiguration(connection, routesToHandlers, originalServerPath, notFoundPageHandler) ))).start();
+                } else {
+                    (new Thread(new ConnectionHandler( new ConnectionHandlerConfiguration(connection, routesToHandlers, notFoundPageHandler) ))).start();
+                }    
             }			
-            
         } catch(IOException e) {
             System.out.println(e.getMessage());
         }

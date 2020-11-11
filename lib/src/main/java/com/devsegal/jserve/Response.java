@@ -2,10 +2,8 @@ package com.devsegal.jserve;
 
 interface Response {
 	
-	StringBuilder respContents = new StringBuilder();
-	boolean bodyContentInserted = false;
+	StringBuilder responseContents = new StringBuilder();
 	
-	public void setContentType(String contentType);
-	public void setConnectionType(String connectionType);
+	public void setResponseHeaders(ResponseHeaders responseHeaders);
 	public void insertContent(String content);
 }

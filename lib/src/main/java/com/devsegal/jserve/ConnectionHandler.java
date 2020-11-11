@@ -4,32 +4,38 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.net.Socket;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.nio.file.Path;
-import java.util.function.Consumer;
 
 class ConnectionHandler implements Runnable {
 
-	StringBuilder requestContents;
     BufferedReader reader; 
 	ResponseWriter responseWriter;
 	BufferedReader requestReader;
-    Socket connection;
-	HashMap<String, WebRouteHandler> routes;
-	String serverPath;
+	Path originalServerPath;
+	Socket connection;
 	String contentType;
-	String responsePath;
+	NotFoundPageHandler notFoundPageHandler;
+	HashMap<String, WebRouteHandler> routesToHandlers;	
 
 
-	public ConnectionHandler(Socket connection, HashMap<String, WebRouteHandler> routes, String serverPath) {	
-		this.connection  = connection;
-		this.routes = routes;
-		this.serverPath = serverPath;
-		this.requestContents = new StringBuilder();
+	public ConnectionHandler(ConnectionHandlerConfiguration configuration) {	
+		this.connection  = configuration.getConnection();
+		this.routesToHandlers = configuration.getRoutesToHandlers();
+		this.notFoundPageHandler = configuration.getNotFoundPageHandler();
 
+		Path temporaryServerPath = configuration.getOriginalServerPath();
+		if(temporaryServerPath != null) {
+			this.originalServerPath = temporaryServerPath;
+		}
+		
 		try {
-			responseWriter = new ResponseWriter(connection.getOutputStream());
+			if(originalServerPath != null) {
+				responseWriter = new ResponseWriter(connection.getOutputStream(), originalServerPath);
+			} else {
+				responseWriter = new ResponseWriter(connection.getOutputStream());
+			}
+
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -42,13 +48,14 @@ class ConnectionHandler implements Runnable {
 	}
 	
 	public void run() {
-			RequestParser requestParser = new RequestParser();
-			requestParser.parseRequest(requestReader);
+			RequestParser requestParser = new RequestParser(requestReader);
+			requestParser.parseRequest();
 
-			WebRouteHandler webRouteHandler = routes.get(requestParser.getPath() + requestParser.getMethod());
+			WebRouteHandler webRouteHandler = routesToHandlers.get(requestParser.getPath() + requestParser.getMethod());
 
+			// If the page is not officially registered as a path, in other words - a 404 page is now necessary 
 			if(webRouteHandler == null) {
-				responseWriter.send(); // response to invalid requests  
+				notFoundPageHandler.handle(requestParser, responseWriter);
 			} else {
 				webRouteHandler.handler(requestParser, responseWriter);	
 			}
