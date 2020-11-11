@@ -9,15 +9,14 @@ import java.nio.file.Path;
 
 class ConnectionHandler implements Runnable {
 
-    BufferedReader reader; 
-	ResponseWriter responseWriter;
-	BufferedReader requestReader;
-	Path originalServerPath;
-	Socket connection;
-	String contentType;
-	NotFoundPageHandler notFoundPageHandler;
-	HashMap<String, WebRouteHandler> routesToHandlers;	
-
+	private boolean keepAlive = true; 
+	private BufferedReader requestReader;
+	private ResponseWriter responseWriter;
+	private Path originalServerPath;
+	private Path publicAssetPath;
+	private Socket connection;
+	private NotFoundPageHandler notFoundPageHandler;
+	private HashMap<String, WebRouteHandler> routesToHandlers;	
 
 	public ConnectionHandler(ConnectionHandlerConfiguration configuration) {	
 		this.connection  = configuration.getConnection();
@@ -48,8 +47,14 @@ class ConnectionHandler implements Runnable {
 	}
 	
 	public void run() {
+		while(keepAlive) {
 			RequestParser requestParser = new RequestParser(requestReader);
 			requestParser.parseRequest();
+
+			// Check if it's a persistent/session connection
+			if(!( requestParser.getHeaders().get("Connection").equals("keep-alive") )) {
+				keepAlive = false;
+			}
 
 			WebRouteHandler webRouteHandler = routesToHandlers.get(requestParser.getPath() + requestParser.getMethod());
 
@@ -60,4 +65,7 @@ class ConnectionHandler implements Runnable {
 				webRouteHandler.handler(requestParser, responseWriter);	
 			}
 		}
+		
+		System.out.print("\n\n");
+	}
 }

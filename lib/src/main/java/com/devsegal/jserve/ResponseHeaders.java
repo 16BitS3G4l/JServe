@@ -1,13 +1,13 @@
 package com.devsegal.jserve;
 
-import java.util.EnumSet;
-
 public class ResponseHeaders {
     private STATUS responseStatus;
     private int responseCode;
 
     private String contentType;
     private String connectionType;
+
+    private static final String CRLF = "\r\n"; 
 
     public ResponseHeaders(STATUS responseStatus, int responseCode, String contentType, String connectionType) {
         this.responseStatus = responseStatus;
@@ -43,16 +43,16 @@ public class ResponseHeaders {
 	public static String convertToString(ResponseHeaders responseHeaders) {
         StringBuilder responseString = new StringBuilder();
 
-        String firstLineResponsePrefix = "HTTP 1.1/";
+        String firstLineResponsePrefix = "HTTP/1.1 ";
         responseString.append(firstLineResponsePrefix + responseHeaders.getResponseCode() + " ");
-        responseString.append(ResponseHeaders.convertResponseStatusToString(responseHeaders) + "\n");
+        responseString.append(ResponseHeaders.convertResponseStatusToString(responseHeaders) + CRLF);
         
-        responseString.append("Connection-type:" + responseHeaders.getConnectionType() + "\n");
+        responseString.append("Connection-type:" + responseHeaders.getConnectionType() + CRLF);
 
-        responseString.append("Content-type:" + responseHeaders.getContentType() + "\n");
+        responseString.append("Content-type:" + responseHeaders.getContentType() + CRLF);
 
         // before adding the content, add one line in between headers and body 
-        responseString.append("\n");
+        responseString.append(CRLF);
         
         return responseString.toString();
     }
