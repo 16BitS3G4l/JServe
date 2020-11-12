@@ -13,7 +13,6 @@ class ConnectionHandler implements Runnable {
 	private BufferedReader requestReader;
 	private ResponseWriter responseWriter;
 	private Path originalServerPath;
-	private Path publicAssetPath;
 	private Socket connection;
 	private NotFoundPageHandler notFoundPageHandler;
 	private HashMap<String, WebRouteHandler> routesToHandlers;	
