@@ -23,3 +23,8 @@ server.route("/", "GET", (request, response) -> {
 
 server.run(); 
 ```
+
+## To-Do List
+1. Introduce middleware - so people can extend it more easily than editing source code itself. 
+2. Serve (by default) binary files instead of ASCII encoded text files - so people can serve images, videos, and other file formats.
+3. Support/Compatibility with Android 
