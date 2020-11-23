@@ -23,3 +23,45 @@ server.route("/", "GET", (request, response) -> {
 
 server.run(); 
 ```
+
+## Utilizing Post requests (with a login page)
+```java
+import com.devsegal.jserve.BaseHTTPServer;
+import com.devsegal.jserve.ResponseHeaders;
+import java.util.Map;
+
+BaseHTTPServer server = new BaseHTTPServer(8080);
+server.setupOriginalServerPath("path/to/server/folder"); // Where files are read from (excluding the public assets folder)
+
+// your login page of choice
+server.route("/login", "GET", (request, response) -> {
+  response.setResponseHeaders(new ResponseHeaders("text/html", "close");
+  response.readContentFromFile("login.html");
+});
+
+server.route("/login", "POST", (request, response) -> {
+  // Assuming we won't send anything back, just send an empty response 
+  response.send();
+  
+  // Now, get all data posted 
+  Map<String, String> postData = request.getPostData(); 
+  
+  // get the username 
+  String username = postData.get("username");
+  
+  // get the password
+  String password = postData.get("password");
+  
+  // save it somewhere
+  // ...
+});
+```
+
+## To-Do List
+(soon to be) 
+- Unit Testing (integration testing will be a future consideration, but at the very least I'd like to create an extensive suite of unit tests)
+- Serve (by default) binary files instead of ASCII encoded text files - so people can serve images, videos, and other file formats.
+
+(at some point in the future) 
+1. Introduce middleware - so people can extend it more easily than editing source code itself. 
+2. Support/Compatibility for Android 
