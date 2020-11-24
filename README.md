@@ -60,7 +60,7 @@ server.route("/login", "POST", (request, response) -> {
 ## To-Do List
 (soon to be) 
 - Unit Testing (integration testing will be a future consideration, but at the very least I'd like to create an extensive suite of unit tests)
-- Serve (by default) binary files instead of ASCII encoded text files - so people can serve images, videos, and other file formats.
+- (**done!**) <s>Serve (by default) binary files instead of ASCII encoded text files - so people can serve images, videos, and other file formats.</s>
 
 (at some point in the future) 
 1. Introduce middleware - so people can extend it more easily than editing source code itself. 
