@@ -65,3 +65,4 @@ server.route("/login", "POST", (request, response) -> {
 (at some point in the future) 
 1. Introduce middleware - so people can extend it more easily than editing source code itself. 
 2. Support/Compatibility for Android 
+3. Add logging instead of intrusive and unwelcomed stdout message clogging 
