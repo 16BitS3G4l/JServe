@@ -1,24 +1,27 @@
 package com.devsegal.jserve;
 
-import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
-public class ResponseWriter extends PrintWriter implements Response {	
+public class ResponseWriter extends OutputStream implements Response {	
 	private StringBuilder responseContents; 
+	private Path responseFileContents;
 	private Path originalServerPath;
+	private OutputStream outputStream;
+
 	
-	
-    public ResponseWriter(OutputStream output) {
-        super(output);
+    public ResponseWriter(OutputStream outputStream) {
+        this.outputStream = outputStream;
 		responseContents = new StringBuilder();
 	}
 	
-	public ResponseWriter(OutputStream output, Path originalServerPath) {
-		super(output);
+	public ResponseWriter(OutputStream outputStream, Path originalServerPath) {
+		this.outputStream = outputStream;
 		this.originalServerPath = originalServerPath;
 
 		responseContents = new StringBuilder();
@@ -40,23 +43,11 @@ public class ResponseWriter extends PrintWriter implements Response {
 	}
 
 	private void readContentFromFile(Path path) {
-		try {
-			insertContent("\n");
-			insertContent(Files.readAllLines(path));
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
+		responseFileContents = path;
 	}
 
 	private void readContentFromFile(Path path, TransformPath translatePath) {
-		Path transformedPath = translatePath.transform(path);
-
-		try {
-			insertContent("\n");
-			insertContent(Files.readAllLines(transformedPath));
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
+		responseFileContents = translatePath.transform(path);
 	}
 
 	public void readContentFromFile(Path path, boolean transformPathFromOriginalServerPath) {
@@ -73,8 +64,21 @@ public class ResponseWriter extends PrintWriter implements Response {
 		readContentFromFile(Path.of(path), transformPathFromOriginalServerPath);
 	}
 
+	@Override
+	public void write(int b) throws IOException {
+		outputStream.write(b);
+	}
+
 	public void send() {
-		print(responseContents);
-		close();
+		try {
+			outputStream.write(responseContents.toString().getBytes());	
+						
+			if(responseFileContents != null)
+				outputStream.write(Files.readAllBytes(responseFileContents));
+
+			outputStream.close();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -46,14 +46,8 @@ class ConnectionHandler implements Runnable {
 	}
 	
 	public void run() {
-		while(keepAlive) {
 			RequestParser requestParser = new RequestParser(requestReader);
 			requestParser.parseRequest();
-
-			// Check if it's a persistent/session connection
-			if(!( requestParser.getHeaders().get("Connection").equals("keep-alive") )) {
-				keepAlive = false;
-			}
 
 			WebRouteHandler webRouteHandler = routesToHandlers.get(requestParser.getPath() + requestParser.getMethod());
 
@@ -63,8 +57,7 @@ class ConnectionHandler implements Runnable {
 			} else {
 				webRouteHandler.handler(requestParser, responseWriter);	
 			}
-		}
 		
-		System.out.print("\n\n");
+			System.out.print("\n\n");
+		}
 	}
-}
