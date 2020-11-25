@@ -40,6 +40,7 @@ public class BaseHTTPServer implements Runnable {
         fileTypeToMIMEType.put("jpeg", "image/jpeg");
         fileTypeToMIMEType.put("png", "image/png");
         fileTypeToMIMEType.put("html", "text/html");
+        fileTypeToMIMEType.put("mp4", "video/mp4");
         fileTypeToMIMEType.put("css", "text/css");
         fileTypeToMIMEType.put("js", "text/javascript");
     }
