@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.function.BiConsumer;
 import java.nio.file.Path;
 
 class ConnectionHandler implements Runnable {
@@ -14,8 +15,8 @@ class ConnectionHandler implements Runnable {
 	private ResponseWriter responseWriter;
 	private Path originalServerPath;
 	private Socket connection;
-	private NotFoundPageHandler notFoundPageHandler;
-	private HashMap<String, WebRouteHandler> routesToHandlers;	
+	private BiConsumer<RequestParser, ResponseWriter> notFoundPageHandler;
+	private HashMap<String, BiConsumer<RequestParser, ResponseWriter>> routesToHandlers;	
 
 	public ConnectionHandler(ConnectionHandlerConfiguration configuration) {	
 		this.connection  = configuration.getConnection();
@@ -49,13 +50,13 @@ class ConnectionHandler implements Runnable {
 			RequestParser requestParser = new RequestParser(requestReader);
 			requestParser.parseRequest();
 
-			WebRouteHandler webRouteHandler = routesToHandlers.get(requestParser.getPath() + requestParser.getMethod());
+			BiConsumer<RequestParser, ResponseWriter> webRouteHandler = routesToHandlers.get(requestParser.getPath() + requestParser.getMethod());
 
 			// If the page is not officially registered as a path, in other words - a 404 page is now necessary 
 			if(webRouteHandler == null) {
-				notFoundPageHandler.handle(requestParser, responseWriter);
+				notFoundPageHandler.accept(requestParser, responseWriter);
 			} else {
-				webRouteHandler.handler(requestParser, responseWriter);	
+				webRouteHandler.accept(requestParser, responseWriter);	
 			}
 		
 			System.out.print("\n\n");

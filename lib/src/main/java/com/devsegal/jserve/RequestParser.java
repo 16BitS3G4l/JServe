@@ -61,13 +61,13 @@ public class RequestParser {
         readContent(line -> parseRequestLineForSignsOfPostData(line));
     }
     
-    public void readContent(FilterData<String> filterData) {
+    public void readContent(Predicate<String> lineRejectable) {
         try {
             while(reader.ready()) {
                 String line = reader.readLine();
                 
-                // If the filter found a reason to stop continuing reading data from the request
-                if(filterData.badData(line)) {
+                // If we find a reason to reject/stop reading content, then stop reading content 
+                if(lineRejectable.test(line)) {
                     break; 
                 }
 

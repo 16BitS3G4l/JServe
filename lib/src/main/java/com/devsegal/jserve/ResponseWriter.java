@@ -3,6 +3,7 @@ package com.devsegal.jserve;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.function.Function;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,12 +47,12 @@ public class ResponseWriter extends OutputStream implements Response {
 		responseFileContents = path;
 	}
 
-	private void readContentFromFile(Path path, TransformPath translatePath) {
-		responseFileContents = translatePath.transform(path);
+	private void readContentFromFile(Path path, Function<Path, Path> convertPathToServerPath) {
+		responseFileContents = convertPathToServerPath.apply(path);
 	}
 
-	public void readContentFromFile(Path path, boolean transformPathFromOriginalServerPath) {
-		if(transformPathFromOriginalServerPath) {
+	public void readContentFromFile(Path path, boolean convertPathToServerPath) {
+		if(convertPathToServerPath) {
 			readContentFromFile(path, (path2) -> {
 				return Path.of(originalServerPath.toString() + "/" + path2.toString());
 			});
@@ -60,8 +61,8 @@ public class ResponseWriter extends OutputStream implements Response {
 		}
 	}
 
-	public void readContentFromFile(String path, boolean transformPathFromOriginalServerPath) {
-		readContentFromFile(Path.of(path), transformPathFromOriginalServerPath);
+	public void readContentFromFile(String path, boolean convertPathToServerPath) {
+		readContentFromFile(Path.of(path), convertPathToServerPath);
 	}
 
 	@Override

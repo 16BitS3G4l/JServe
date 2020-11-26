@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,10 +15,10 @@ public class BaseHTTPServer implements Runnable {
     private int port = 80; 
     private boolean isStopped = false;
     
-    private NotFoundPageHandler notFoundPageHandler;
+    private BiConsumer<RequestParser, ResponseWriter> notFoundPageHandler;
     private Path originalServerPath;  
     private ServerSocket server;
-    private HashMap<String, WebRouteHandler> routesToHandlers;
+    private HashMap<String, BiConsumer<RequestParser, ResponseWriter>> routesToHandlers;
     private HashMap<String, String> fileTypeToMIMEType = new HashMap<>();
     
     /**
@@ -147,7 +148,7 @@ public class BaseHTTPServer implements Runnable {
         setupPublicAssetFolder(Path.of(assetFolder), assetFolderPrefix);
     }
 
-    public void setupNotFoundPageHandler(NotFoundPageHandler notFoundPageHandler) {
+    public void setupNotFoundPageHandler(BiConsumer<RequestParser, ResponseWriter> notFoundPageHandler) {
         this.notFoundPageHandler = notFoundPageHandler;
     }
 
@@ -156,7 +157,7 @@ public class BaseHTTPServer implements Runnable {
      * @param method the HTTP method the WebRouteHandler should be invoked on.
      * @param handler the code that will be executed when a request that matches the path + method occurs.
      */
-    public void route(String path, String method, WebRouteHandler handler) {
+    public void route(String path, String method, BiConsumer<RequestParser, ResponseWriter> handler) {
         routesToHandlers.put(path + method, handler);
     }
 
