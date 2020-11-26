@@ -57,6 +57,14 @@ server.route("/login", "POST", (request, response) -> {
 });
 ```
 
+## Most Recent Changes
+Replace ambiguous interfaces for Predicates, Consumers, etc... (if necessary and enough evidence are present for negligent code)
+- FilterData (resolved by introducing a Predicate<String> lineRejectable)
+- NotFoundPageHandler (resolved by introducing a BiConsumer<RequestParser, ResponseWriter> notFoundPageHandler)
+- Response 
+- TransformPath (resolved by introducing a Function<Path, Path> translatePath) 
+- WebRouteHandler (resolved by introducing a BiConsumer<RequestParser, ResponseWriter> webRouteHandler)
+  
 ## To-Do List
 (soon to be) 
 - Unit Testing (integration testing will be a future consideration, but at the very least I'd like to create an extensive suite of unit tests)
