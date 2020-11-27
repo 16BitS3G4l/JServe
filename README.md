@@ -58,7 +58,7 @@ server.route("/login", "POST", (request, response) -> {
 ```
 
 ## Most Recent Changes
-Replace ambiguous interfaces for Predicates, Consumers, etc... (if necessary and enough evidence are present for negligent code)
+Replace ambiguous interfaces for Predicates, Consumers, etc... (if necessary and enough evidence is present to indicate negligent practices/code)
 - FilterData (resolved by introducing a Predicate<String> lineRejectable)
 - NotFoundPageHandler (resolved by introducing a BiConsumer<RequestParser, ResponseWriter> notFoundPageHandler)
 - Response 
