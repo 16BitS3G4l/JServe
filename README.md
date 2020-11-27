@@ -1,5 +1,8 @@
 # JServe
-A lightweight, simple-to-use HTTP Web Server built with Java.
+A lightweight, simple-to-use HTTP Web Server built with Java. 
+
+note: Relies on Java 8+ API's
+
 <img src="https://i.ibb.co/3RKzGsw/Adobe-Stock-389747989.jpg" />
 
 # Quick setup
