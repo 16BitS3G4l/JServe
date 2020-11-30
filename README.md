@@ -19,11 +19,13 @@ import com.devsegal.jserve.ResponseHeaders;
 BaseHTTPServer server = new BaseHTTPServer(8080); // port
 
 server.route("/", "GET", (request, response) -> {
+
   try {
         response.setResponseHeaders(new ResponseHeaders("text/html", "close"));
       } catch(ResponseStatusNullException e) {
         e.printStackTrace();
       } 
+      
   response.insertContent("Hello world!");
   response.send();
 });
