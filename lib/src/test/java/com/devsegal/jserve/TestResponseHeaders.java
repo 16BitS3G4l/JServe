@@ -36,6 +36,6 @@ public class TestResponseHeaders {
    @Test
    public void testConvertingResponseHeadersToStringReturnsValidStatusLine() throws ResponseStatusNullException {
       ResponseHeaders headers = new ResponseHeaders(STATUS.OK, 200, null, null);
-      assertTrue(ResponseHeaders.convertToString(headers).startsWith("HTTP/1.1 200 OK"));
+      assertTrue(ResponseHeaders.convertToString(headers).startsWith("HTTP/1.1 200 OK\r\n"));
    }
 }
