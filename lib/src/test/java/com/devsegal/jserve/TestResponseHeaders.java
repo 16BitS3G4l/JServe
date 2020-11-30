@@ -15,13 +15,13 @@ public class TestResponseHeaders {
    }
 
    @Test
-   public void testConvertingResponseStatusToStringReturnsValidStringForTwoHundredOkStatus() throws ResponseStatusNullException {
+   public void testConvertingResponseStatusToStringReturnsValidStringForOneWordStatus() throws ResponseStatusNullException {
       ResponseHeaders headers = new ResponseHeaders(STATUS.OK, 0, null, null);
       assertEquals("OK", ResponseHeaders.convertResponseStatusToString(headers));
    }
 
    @Test
-   public void testConvertingResponseStatusToStringReturnsValidStringForMoreThanOneWordSeparatedByUnderscore() throws ResponseStatusNullException {
+   public void testConvertingResponseStatusToStringReturnsValidStringForTwoWordStatus() throws ResponseStatusNullException {
       ResponseHeaders headers = new ResponseHeaders(STATUS.NOT_FOUND, 0, null, null);
       assertEquals("NOT FOUND", ResponseHeaders.convertResponseStatusToString(headers));
    }
