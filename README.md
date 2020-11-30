@@ -19,7 +19,11 @@ import com.devsegal.jserve.ResponseHeaders;
 BaseHTTPServer server = new BaseHTTPServer(8080); // port
 
 server.route("/", "GET", (request, response) -> {
-  response.setResponseHeaders(new ResponseHeaders("text/html", "close"));
+  try {
+        response.setResponseHeaders(new ResponseHeaders("text/html", "close"));
+      } catch(ResponseStatusNullException e) {
+        e.printStackTrace();
+      } 
   response.insertContent("Hello world!");
   response.send();
 });
@@ -38,7 +42,13 @@ server.setupOriginalServerPath("path/to/server/folder"); // Where files are read
 
 // your login page of choice
 server.route("/login", "GET", (request, response) -> {
-  response.setResponseHeaders(new ResponseHeaders("text/html", "close");
+  
+  try {
+      response.setResponseHeaders(new ResponseHeaders("text/html", "close"); 
+  } catch(ResponseStatusNullException e) {
+      e.printStackTrace();
+  } 
+  
   response.readContentFromFile("login.html");
 });
 
