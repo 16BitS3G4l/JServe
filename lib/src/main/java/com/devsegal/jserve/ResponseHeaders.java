@@ -20,7 +20,11 @@ public class ResponseHeaders {
         this(STATUS.OK, 200, contentType, connectionType);
     }
 
-    public static String convertResponseStatusToString(ResponseHeaders responseHeaders) {
+    public static String convertResponseStatusToString(ResponseHeaders responseHeaders) throws ResponseStatusNullException {
+        if(responseHeaders.getResponseStatus() == null) {
+            throw new ResponseStatusNullException("Your ResponseHeaders object has a null value for it's response status.");
+        }
+
         return responseHeaders.getResponseStatus().name().replace("_", " ");
     }
 
@@ -40,7 +44,7 @@ public class ResponseHeaders {
         return connectionType;
     }
 
-	public static String convertToString(ResponseHeaders responseHeaders) {
+	public static String convertToString(ResponseHeaders responseHeaders) throws ResponseStatusNullException {
         StringBuilder responseString = new StringBuilder();
 
         String firstLineResponsePrefix = "HTTP/1.1 ";
