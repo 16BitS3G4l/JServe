@@ -1,9 +1,6 @@
 package com.devsegal.jserve;
 
-interface Response {
-	
-	StringBuilder responseContents = new StringBuilder();
-	
+interface Response {	
 	public void setResponseHeaders(ResponseHeaders responseHeaders);
 	public void insertContent(String content);
 }
