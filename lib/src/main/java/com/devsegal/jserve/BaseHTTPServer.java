@@ -103,22 +103,32 @@ public class BaseHTTPServer implements Runnable {
         return path.getFileName().toString();
     }
 
-    public BiConsumer<RequestParser, ResponseWriter> createAssetWebRouteHandler(Path pathToAssetFile) {    
+    public BiConsumer<RequestParser, ResponseWriter> createAssetWebRouteHandler(Path pathToAssetFile) {
         String contentType = getContentType(pathToAssetFile);
 
         // If there exists a content type that matches this asset file
         if(!contentType.equals("")) {
             
             return (request, response) -> {
-                response.setResponseHeaders(new ResponseHeaders(contentType, "close"));
-                response.readContentFromFile(pathToAssetFile, false);
-                response.send();
+                    try {
+                        response.setResponseHeaders(new ResponseHeaders(contentType, "close"));
+                    } catch (ResponseStatusNullException e) {
+                        e.printStackTrace();
+                    }
+
+                    response.readContentFromFile(pathToAssetFile, false);
+                    response.send();
             };
             
         } else {
             
             return (request, response) -> {
-                response.setResponseHeaders(new ResponseHeaders("text/plain", "close"));
+                try {
+                    response.setResponseHeaders(new ResponseHeaders("text/plain", "close"));
+                } catch(ResponseStatusNullException e) {
+                    e.printStackTrace();
+                }
+
                 response.readContentFromFile(pathToAssetFile, false);
                 response.send();
             };
