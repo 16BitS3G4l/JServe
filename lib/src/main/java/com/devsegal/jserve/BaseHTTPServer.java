@@ -8,7 +8,6 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.spi.FileTypeDetector;
 
 public class BaseHTTPServer implements Runnable {
 
@@ -95,39 +94,62 @@ public class BaseHTTPServer implements Runnable {
 
         return "";
     }
-    
-    // TODO: replace this method with more readable one and better structured
-    // idea: put lambda in one function 
-    // TODO: allow nested folders in public asset folder
+
+    public boolean pathIsDirectory(Path path) {
+        return path.toFile().isDirectory();
+    }
+
+    public String getFileName(Path path) {
+        return path.getFileName().toString();
+    }
+
+    public BiConsumer<RequestParser, ResponseWriter> createAssetWebRouteHandler(Path pathToAssetFile) {    
+        String contentType = getContentType(pathToAssetFile);
+
+        // If there exists a content type that matches this asset file
+        if(!contentType.equals("")) {
+            
+            return (request, response) -> {
+                response.setResponseHeaders(new ResponseHeaders(contentType, "close"));
+                response.readContentFromFile(pathToAssetFile, false);
+                response.send();
+            };
+            
+        } else {
+            
+            return (request, response) -> {
+                response.setResponseHeaders(new ResponseHeaders("text/plain", "close"));
+                response.readContentFromFile(pathToAssetFile, false);
+                response.send();
+            };
+
+        }
+    }
+
+    public void addToRoutes(Path pathToAssetFile, String assetFolderPrefix) {
+        routesToHandlers.put(assetFolderPrefix + "/" + getFileName(pathToAssetFile) + "GET", createAssetWebRouteHandler(pathToAssetFile));
+    }
+
+    public void registerAssetFileAsRoute(Path pathToAssetFile, String assetFolderPrefix) {
+        System.out.println(pathToAssetFile.toString()); 
+
+        if(!pathIsDirectory(pathToAssetFile)) {
+            addToRoutes(pathToAssetFile, assetFolderPrefix);
+        }
+    } 
+
     /**
      * Registers all files in a folder to the routesHandler, so these assets will be sent/found instead of a 404 page.
      * @param assetFolder the folder to register all assets from. 
      * @param assetFolderPrefix instead of routes that start from the root of the server, you can add a prefix to these routes.
      */
-    public void setupPublicAssetFolder(Path assetFolder, String assetFolderPrefix) {
+    public void setupAssetFilesAsRoutes(Path assetFolder, String assetFolderPrefix) {
         Stream<Path> publicAssets = null;
 
         try {
+            
             publicAssets = Files.walk(assetFolder);
-
-            publicAssets.forEach(path -> {
-                System.out.println(path.toString()); 
-
-                if(!path.toFile().isDirectory()) {
-                    routesToHandlers.put(assetFolderPrefix + "/" + path.getFileName().toString() + "GET", (request, response) -> {
-                        String contentType = getContentType(path);
-
-                        if(!contentType.equals("")) {
-                            response.setResponseHeaders(new ResponseHeaders(contentType, "close"));
-                        } else {
-                            response.setResponseHeaders(new ResponseHeaders("text/plain", "close"));
-                        }
-
-                        response.readContentFromFile(path, false);
-                        response.send();
-                    });
-                }
-            });
+            publicAssets.forEach(pathToAssetFile -> registerAssetFileAsRoute(pathToAssetFile, assetFolderPrefix));
 
         } catch(IOException e) {
             e.printStackTrace();
@@ -137,7 +159,7 @@ public class BaseHTTPServer implements Runnable {
     }
 
     public void setupPublicAssetFolder(Path assetFolder) {
-        setupPublicAssetFolder(assetFolder, "");
+        setupAssetFilesAsRoutes(assetFolder, "");
     }
 
     public void setupPublicAssetFolder(String path) {
@@ -145,7 +167,7 @@ public class BaseHTTPServer implements Runnable {
     }
 
     public void setupPublicAssetFolder(String assetFolder, String assetFolderPrefix) {
-        setupPublicAssetFolder(Path.of(assetFolder), assetFolderPrefix);
+        setupAssetFilesAsRoutes(Path.of(assetFolder), assetFolderPrefix);
     }
 
     public void setupNotFoundPageHandler(BiConsumer<RequestParser, ResponseWriter> notFoundPageHandler) {
