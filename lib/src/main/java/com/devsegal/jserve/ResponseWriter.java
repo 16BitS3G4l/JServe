@@ -4,10 +4,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.function.Function;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 
 public class ResponseWriter extends OutputStream implements Response {	
 	private StringBuilder responseContents; 
@@ -28,7 +26,7 @@ public class ResponseWriter extends OutputStream implements Response {
 		responseContents = new StringBuilder();
 	}
 
-	public void setResponseHeaders(ResponseHeaders responseHeaders) {
+	public void setResponseHeaders(ResponseHeaders responseHeaders) throws ResponseStatusNullException {
 		responseContents.insert(0, ResponseHeaders.convertToString(responseHeaders));
 	}
 
