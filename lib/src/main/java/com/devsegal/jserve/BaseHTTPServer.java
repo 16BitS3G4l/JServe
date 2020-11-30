@@ -30,11 +30,7 @@ public class BaseHTTPServer implements Runnable {
         fileTypeToMIMEType = new HashMap<>();
         initializeFileTypesToMIMETypes();
     }
-    
-    /**
-     * 
-     * @param path the physical path the server should read from when sending files (aside from public asset files)
-     */
+
     private void initializeFileTypesToMIMETypes() {
         fileTypeToMIMEType.put("jpg", "image/jpeg");
         fileTypeToMIMEType.put("jpeg", "image/jpeg");
