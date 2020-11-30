@@ -6,6 +6,7 @@ package com.devsegal.jserve;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestResponseHeaders {
    @Test(expected = ResponseStatusNullException.class)
@@ -24,5 +25,17 @@ public class TestResponseHeaders {
    public void testConvertingResponseStatusToStringReturnsValidStringForTwoWordStatus() throws ResponseStatusNullException {
       ResponseHeaders headers = new ResponseHeaders(STATUS.NOT_FOUND, 0, null, null);
       assertEquals("NOT FOUND", ResponseHeaders.convertResponseStatusToString(headers));
+   }
+
+   @Test(expected = ResponseStatusNullException.class)
+   public void testConvertingResponseHeadersToStringThrowsResponseStatusNullExceptionForNullStatus() throws ResponseStatusNullException {
+      ResponseHeaders headers = new ResponseHeaders(null, 0, null, null);
+      ResponseHeaders.convertToString(headers);
+   }
+
+   @Test
+   public void testConvertingResponseHeadersToStringReturnsValidStatusLine() throws ResponseStatusNullException {
+      ResponseHeaders headers = new ResponseHeaders(STATUS.OK, 200, null, null);
+      assertTrue(ResponseHeaders.convertToString(headers).startsWith("HTTP/1.1 200 OK"));
    }
 }
