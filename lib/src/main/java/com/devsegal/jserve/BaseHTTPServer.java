@@ -21,7 +21,6 @@ public class BaseHTTPServer implements Runnable {
     private HashMap<String, String> fileTypeToMIMEType = new HashMap<>();
     
     /**
-     * 
      * @param port the port the server will listen on.
      */
     public BaseHTTPServer(int port) {
