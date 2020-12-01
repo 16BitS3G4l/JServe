@@ -13,7 +13,7 @@ You can install the jar (from the releases page) or install it from maven/gradle
 More information will be available soon on this process. 
 
 # Examples 
-## Simple Server
+## Simple Server (basic GET request demonstration)
 ```java
 import com.devsegal.jserve.BaseHTTPServer;
 import com.devsegal.jserve.ResponseHeaders;
