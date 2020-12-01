@@ -2,13 +2,13 @@
 
 An HTTP 1.1 Web Server built with Java. 
 
-## Goals
+# Goals
 The major focuses are providing a framework that serves the general usage of a web server (with good performance in mind), and maintains a clean/readable codebase. If it comes to it, I'm somewhat of a germaphobe with code, so clean will mostly win over, unless it's an order of magnitude difference in performance, and puts the application at risk.    
 
-## Important Notes
+# Important Notes
 Relies on Java 8+ API's
 
-# Quick setup
+# Quick Setup
 You can install the jar (from the releases page) or install it from maven/gradle.
 More information will be available soon on this process. 
 
