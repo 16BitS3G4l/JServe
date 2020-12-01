@@ -1,6 +1,6 @@
 # JServe <img src="https://i.ibb.co/3RKzGsw/Adobe-Stock-389747989.jpg" height="55" />
 
-An HTTP Web Server built with Java. 
+An HTTP 1.1 Web Server built with Java. 
 
 ## Goals
 The major focuses are providing a framework that serves the general usage of a web server (with good performance in mind), and maintains a clean/readable codebase. If it comes to it, I'm somewhat of a germaphobe with code, so clean will mostly win over, unless it's an order of magnitude difference in performance, and puts the application at risk.    
