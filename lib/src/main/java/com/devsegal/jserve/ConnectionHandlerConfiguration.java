@@ -7,28 +7,28 @@ import java.nio.file.Path;
 
 public class ConnectionHandlerConfiguration {
     private Socket connection;
-    private HashMap<String, BiConsumer<RequestParser, ResponseWriter>> routesToHandlers;
+    private RouteRegistry routes;
     private Path originalServerPath;
-    private BiConsumer<RequestParser, ResponseWriter> notFoundPageHandler;
+    private BiConsumer<RequestParser, ResponseStream> notFoundPageHandler;
 
-    public ConnectionHandlerConfiguration(Socket connection, HashMap<String, BiConsumer<RequestParser, ResponseWriter>> routesToHandlers) {
+    public ConnectionHandlerConfiguration(Socket connection, RouteRegistry routes) {
         this.connection = connection;
-        this.routesToHandlers = routesToHandlers;
+        this.routes = routes;
     }
 
-    public ConnectionHandlerConfiguration(Socket connection, HashMap<String, BiConsumer<RequestParser, ResponseWriter>> routesToHandlers, BiConsumer<RequestParser, ResponseWriter> notFoundPageHandler) {
-        this(connection, routesToHandlers);
+    public ConnectionHandlerConfiguration(Socket connection, RouteRegistry routes, BiConsumer<RequestParser, ResponseStream> notFoundPageHandler) {
+        this(connection, routes);
         this.notFoundPageHandler = notFoundPageHandler;
     }
 
-    public ConnectionHandlerConfiguration(Socket connection, HashMap<String, BiConsumer<RequestParser, ResponseWriter>> routesToHandlers, Path originalServerPath) {
+    public ConnectionHandlerConfiguration(Socket connection, RouteRegistry routes, Path originalServerPath) {
         this.connection = connection;
-        this.routesToHandlers = routesToHandlers;
+        this.routes = routes;
         this.originalServerPath = originalServerPath;
     }
 
-    public ConnectionHandlerConfiguration(Socket connection, HashMap<String, BiConsumer<RequestParser, ResponseWriter>> routesToHandlers, Path originalServerPath, BiConsumer<RequestParser, ResponseWriter> notFoundPageHandler) {
-        this(connection, routesToHandlers, originalServerPath);
+    public ConnectionHandlerConfiguration(Socket connection, RouteRegistry routes, Path originalServerPath, BiConsumer<RequestParser, ResponseStream> notFoundPageHandler) {
+        this(connection, routes, originalServerPath);
         this.notFoundPageHandler = notFoundPageHandler;
     }
 
@@ -36,15 +36,15 @@ public class ConnectionHandlerConfiguration {
         return connection;
     }
 
-    public HashMap<String, BiConsumer<RequestParser, ResponseWriter>> getRoutesToHandlers() {
-        return routesToHandlers;
+    public RouteRegistry getRouteRegistry() {
+        return routes;
     }
 
     public Path getOriginalServerPath() {
         return originalServerPath;
     }
 
-    public BiConsumer<RequestParser, ResponseWriter> getNotFoundPageHandler() {
+    public BiConsumer<RequestParser, ResponseStream> getNotFoundPageHandler() {
         return notFoundPageHandler;
     }
 }

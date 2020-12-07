@@ -7,19 +7,19 @@ import java.util.function.Function;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class ResponseWriter extends OutputStream implements Response {	
+public class ResponseStream implements Response {
 	private StringBuilder responseContents; 
 	private Path responseFileContents;
 	private Path originalServerPath;
 	private OutputStream outputStream;
 
 	
-    public ResponseWriter(OutputStream outputStream) {
+    public ResponseStream(OutputStream outputStream) {
         this.outputStream = outputStream;
 		responseContents = new StringBuilder();
 	}
 	
-	public ResponseWriter(OutputStream outputStream, Path originalServerPath) {
+	public ResponseStream(OutputStream outputStream, Path originalServerPath) {
 		this.outputStream = outputStream;
 		this.originalServerPath = originalServerPath;
 
@@ -63,7 +63,6 @@ public class ResponseWriter extends OutputStream implements Response {
 		readContentFromFile(Path.of(path), convertPathToServerPath);
 	}
 
-	@Override
 	public void write(int b) throws IOException {
 		outputStream.write(b);
 	}

@@ -3,41 +3,45 @@ package com.devsegal.jserve;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.function.BiConsumer;
-import java.util.stream.Stream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class BaseHTTPServer implements Runnable {
-
-    private int port = 80; 
+    private int port = 80;
     private boolean isStopped = false;
-    
-    private BiConsumer<RequestParser, ResponseWriter> notFoundPageHandler;
-    private Path originalServerPath;  
+
     private ServerSocket server;
-    private HashMap<String, BiConsumer<RequestParser, ResponseWriter>> routesToHandlers;
-    private HashMap<String, String> fileTypeToMIMEType = new HashMap<>();
-    
+    private Path originalServerPath;
+    private Path properties;
+    private BiConsumer<RequestParser, ResponseStream> notFoundPageHandler;
+    private RouteRegistry routes;
+    private FileMIMETypeStore fileTypes;
+
     /**
      * @param port the port the server will listen on.
      */
     public BaseHTTPServer(int port) {
         this.port = port;
-        routesToHandlers = new HashMap<>();
-        fileTypeToMIMEType = new HashMap<>();
-        initializeFileTypesToMIMETypes();
+
+        try {
+            fileTypes = new FileMIMETypeStore();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
+        routes = new RouteRegistry(fileTypes);
     }
 
-    private void initializeFileTypesToMIMETypes() {
-        fileTypeToMIMEType.put("jpg", "image/jpeg");
-        fileTypeToMIMEType.put("jpeg", "image/jpeg");
-        fileTypeToMIMEType.put("png", "image/png");
-        fileTypeToMIMEType.put("html", "text/html");
-        fileTypeToMIMEType.put("mp4", "video/mp4");
-        fileTypeToMIMEType.put("css", "text/css");
-        fileTypeToMIMEType.put("js", "text/javascript");
+    public BaseHTTPServer(int port, Path properties) {
+        this.port = port;
+
+        try {
+            fileTypes = new FileMIMETypeStore(properties);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
+        routes = new RouteRegistry(fileTypes);
     }
 
     public void setupOriginalServerPath(Path path) {
@@ -51,141 +55,24 @@ public class BaseHTTPServer implements Runnable {
         setupOriginalServerPath(Path.of(path));
     }
 
-    public String getFileExtension(String fileName) {
-        int dotIndex = fileName.lastIndexOf(".");
-        
-        // dot has not been found
-        if(dotIndex == -1) {
-            return "";
-        } 
-
-        // the file starts with a dot, no file extension 
-        else if(dotIndex == 0) { 
-            return "";
-        } 
-
-        // dot has been found, but it is the last character of the filename 
-        // meaning there is no file extension
-        else if(dotIndex == fileName.length()) {
-            return "";
-        }
-
-        // a file extension exists
-        else {
-            return fileName.substring(dotIndex + 1, fileName.length());
-        }
-    }
-
-    public String getContentType(Path path) {
-        String fileName = path.getFileName().toString();
-        String fileExtension = getFileExtension(fileName);
-
-        System.out.println(fileExtension);
-
-        // we found a file extension
-        if(!fileExtension.equals("")) {
-            return fileTypeToMIMEType.get(fileExtension);
-        }
-
-        return "";
-    }
-
-    public boolean pathIsDirectory(Path path) {
-        return path.toFile().isDirectory();
-    }
-
-    public String getFileName(Path path) {
-        return path.getFileName().toString();
-    }
-
-    public BiConsumer<RequestParser, ResponseWriter> createAssetWebRouteHandler(Path pathToAssetFile) {
-        String contentType = getContentType(pathToAssetFile);
-
-        // If there exists a content type that matches this asset file
-        if(!contentType.equals("")) {
-            
-            return (request, response) -> {
-                    try {
-                        response.setResponseHeaders(new ResponseHeaders(contentType, "close"));
-                    } catch (ResponseStatusNullException e) {
-                        e.printStackTrace();
-                    }
-
-                    response.readContentFromFile(pathToAssetFile, false);
-                    response.send();
-            };
-            
-        } else {
-            
-            return (request, response) -> {
-                try {
-                    response.setResponseHeaders(new ResponseHeaders("text/plain", "close"));
-                } catch(ResponseStatusNullException e) {
-                    e.printStackTrace();
-                }
-
-                response.readContentFromFile(pathToAssetFile, false);
-                response.send();
-            };
-
-        }
-    }
-
-    public void addToRoutes(Path pathToAssetFile, String assetFolderPrefix) {
-        routesToHandlers.put(assetFolderPrefix + "/" + getFileName(pathToAssetFile) + "GET", createAssetWebRouteHandler(pathToAssetFile));
-    }
-
-    public void registerAssetFileAsRoute(Path pathToAssetFile, String assetFolderPrefix) {
-        System.out.println(pathToAssetFile.toString()); 
-
-        if(!pathIsDirectory(pathToAssetFile)) {
-            addToRoutes(pathToAssetFile, assetFolderPrefix);
-        }
-    } 
-
-    /**
-     * Registers all files in a folder to the routesHandler, so these assets will be sent/found instead of a 404 page.
-     * @param assetFolder the folder to register all assets from. 
-     * @param assetFolderPrefix instead of routes that start from the root of the server, you can add a prefix to these routes.
-     */
-    public void setupAssetFilesAsRoutes(Path assetFolder, String assetFolderPrefix) {
-        Stream<Path> publicAssets = null;
-
-        try {
-            
-            publicAssets = Files.walk(assetFolder);
-            publicAssets.forEach(pathToAssetFile -> registerAssetFileAsRoute(pathToAssetFile, assetFolderPrefix));
-
-        } catch(IOException e) {
-            e.printStackTrace();
-        } finally {
-            publicAssets.close();
-        }
-    }
-
     public void setupPublicAssetFolder(Path assetFolder) {
-        setupAssetFilesAsRoutes(assetFolder, "");
+        routes.registerAssetFolderAsRoutes(assetFolder, "");
     }
 
-    public void setupPublicAssetFolder(String path) {
-        setupPublicAssetFolder(Path.of(path));
+    public void setupPublicAssetFolder(String assetFolder) {
+        routes.registerAssetFolderAsRoutes(Path.of(assetFolder), "");
     }
 
     public void setupPublicAssetFolder(String assetFolder, String assetFolderPrefix) {
-        setupAssetFilesAsRoutes(Path.of(assetFolder), assetFolderPrefix);
+        routes.registerAssetFolderAsRoutes(Path.of(assetFolder), assetFolderPrefix);
     }
 
-    public void setupNotFoundPageHandler(BiConsumer<RequestParser, ResponseWriter> notFoundPageHandler) {
+    public void setupNotFoundPageHandler(BiConsumer<RequestParser, ResponseStream> notFoundPageHandler) {
         this.notFoundPageHandler = notFoundPageHandler;
     }
 
-    /**
-     * @param path represents a route (from the root of the server website.com/route) 
-     * @param method the HTTP method the WebRouteHandler should be invoked on.
-     * @param handler the code that will be executed when a request that matches the path + method occurs.
-     */
-    public void route(String path, String method, BiConsumer<RequestParser, ResponseWriter> handler) {
-        routesToHandlers.put(path + method, handler);
+    public void route(String path, String method, BiConsumer<RequestParser, ResponseStream> handler) {
+            routes.registerRoute(path, method, handler);
     }
 
     /**
@@ -208,9 +95,9 @@ public class BaseHTTPServer implements Runnable {
                 Socket connection = server.accept();
                 
                 if(originalServerPath != null) {
-                    (new Thread(new ConnectionHandler( new ConnectionHandlerConfiguration(connection, routesToHandlers, originalServerPath, notFoundPageHandler) ))).start();
+                    (new Thread(new ConnectionHandler( new ConnectionHandlerConfiguration(connection, routes, originalServerPath, notFoundPageHandler) ))).start();
                 } else {
-                    (new Thread(new ConnectionHandler( new ConnectionHandlerConfiguration(connection, routesToHandlers, notFoundPageHandler) ))).start();
+                    (new Thread(new ConnectionHandler( new ConnectionHandlerConfiguration(connection, routes, notFoundPageHandler) ))).start();
                 }    
             }			
         } catch(IOException e) {
