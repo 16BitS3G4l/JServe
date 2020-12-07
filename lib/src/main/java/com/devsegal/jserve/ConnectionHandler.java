@@ -12,15 +12,15 @@ class ConnectionHandler implements Runnable {
 
 	private boolean keepAlive = true; 
 	private BufferedReader requestReader;
-	private ResponseWriter responseWriter;
+	private ResponseStream responseStream;
 	private Path originalServerPath;
 	private Socket connection;
-	private BiConsumer<RequestParser, ResponseWriter> notFoundPageHandler;
-	private HashMap<String, BiConsumer<RequestParser, ResponseWriter>> routesToHandlers;	
+	private BiConsumer<RequestParser, ResponseStream> notFoundPageHandler;
+	private RouteRegistry routes;
 
 	public ConnectionHandler(ConnectionHandlerConfiguration configuration) {	
 		this.connection  = configuration.getConnection();
-		this.routesToHandlers = configuration.getRoutesToHandlers();
+		this.routes = configuration.getRouteRegistry();
 		this.notFoundPageHandler = configuration.getNotFoundPageHandler();
 
 		Path temporaryServerPath = configuration.getOriginalServerPath();
@@ -30,9 +30,9 @@ class ConnectionHandler implements Runnable {
 		
 		try {
 			if(originalServerPath != null) {
-				responseWriter = new ResponseWriter(connection.getOutputStream(), originalServerPath);
+				responseStream = new ResponseStream(connection.getOutputStream(), originalServerPath);
 			} else {
-				responseWriter = new ResponseWriter(connection.getOutputStream());
+				responseStream = new ResponseStream(connection.getOutputStream());
 			}
 
 		} catch(IOException e) {
@@ -50,15 +50,15 @@ class ConnectionHandler implements Runnable {
 			RequestParser requestParser = new RequestParser(requestReader);
 			requestParser.parseRequest();
 
-			BiConsumer<RequestParser, ResponseWriter> webRouteHandler = routesToHandlers.get(requestParser.getPath() + requestParser.getMethod());
+			BiConsumer<RequestParser, ResponseStream> regularPageHandler = routes.getHandler(requestParser.getPath() + requestParser.getMethod());
 
 			// If the page is not officially registered as a path, in other words - a 404 page is now necessary 
-			if(webRouteHandler == null) {
-				notFoundPageHandler.accept(requestParser, responseWriter);
+			if(regularPageHandler == null) {
+				notFoundPageHandler.accept(requestParser, responseStream);
 			} else {
-				webRouteHandler.accept(requestParser, responseWriter);	
+				regularPageHandler.accept(requestParser, responseStream);
 			}
-		
+
 			System.out.print("\n\n");
 		}
 	}
