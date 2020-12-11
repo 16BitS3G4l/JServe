@@ -76,6 +76,9 @@ server.route("/login", "POST", (request, response) -> {
 ```
 
 ## Most Recent Changes (Changelog)
+_Refactored the framework by abstraction. Abstracted out concepts like Route handling into a registry of sorts, as well as a MIMEType store._
+
+
 1._Introduced a new exception for cases of a Null response status, and added unit testing to facilitate better code practices, and code quality._
 
 
