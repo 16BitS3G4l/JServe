@@ -79,10 +79,10 @@ server.route("/login", "POST", (request, response) -> {
 _Refactored the framework by abstraction. Abstracted out concepts like Route handling into a registry of sorts, as well as a MIMEType store._
 
 
-1._Introduced a new exception for cases of a Null response status, and added unit testing to facilitate better code practices, and code quality._
+_Introduced a new exception for cases of a Null response status, and added unit testing to facilitate better code practices, and code quality._
 
 
-2._Replace ambiguous interfaces for Predicates, Consumers, etc... (if necessary and enough evidence is present to indicate negligent practices/code)_
+_Replace ambiguous interfaces for Predicates, Consumers, etc... (if necessary and enough evidence is present to indicate negligent practices/code)_
 - FilterData (resolved by introducing a Predicate<String> lineRejectable)
 - NotFoundPageHandler (resolved by introducing a BiConsumer<RequestParser, ResponseWriter> notFoundPageHandler)
 - Response 
