@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.function.BiConsumer;
 import java.nio.file.Path;
 
-public class BaseHTTPServer implements Runnable {
+public class HTTPServer implements Runnable {
     private int port = 80;
     private boolean isStopped = false;
 
@@ -20,7 +20,7 @@ public class BaseHTTPServer implements Runnable {
     /**
      * @param port the port the server will listen on.
      */
-    public BaseHTTPServer(int port) {
+    public HTTPServer(int port) {
         this.port = port;
 
         try {
@@ -32,7 +32,7 @@ public class BaseHTTPServer implements Runnable {
         routes = new RouteRegistry(fileTypes);
     }
 
-    public BaseHTTPServer(int port, Path properties) {
+    public HTTPServer(int port, Path properties) {
         this.port = port;
 
         try {

@@ -15,11 +15,11 @@ More information will be available soon on this process.
 # Examples 
 ## Simple Server (basic GET request demonstration)
 ```java
-import com.devsegal.jserve.BaseHTTPServer;
+import com.devsegal.jserve.HTTPServer;
 import com.devsegal.jserve.ResponseHeaders;
 
 //... your other code
-BaseHTTPServer server = new BaseHTTPServer(8080); // port
+HTTPServer server = new HTTPServer(8080); // port
 
 server.route("/", "GET", (request, response) -> {
 
@@ -38,11 +38,11 @@ server.run();
 
 ## Utilizing Post requests (with a login page)
 ```java
-import com.devsegal.jserve.BaseHTTPServer;
+import com.devsegal.jserve.HTTPServer;
 import com.devsegal.jserve.ResponseHeaders;
 import java.util.Map;
 
-BaseHTTPServer server = new BaseHTTPServer(8080);
+HTTPServer server = new HTTPServer(8080);
 server.setupOriginalServerPath("path/to/server/folder"); // Where files are read from (excluding the public assets folder)
 
 // your login page of choice
