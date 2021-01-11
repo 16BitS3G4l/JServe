@@ -2,7 +2,6 @@ package com.devsegal.jserve;
 
 import java.io.*;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Properties;
 
 public class FileMIMETypeStore {
