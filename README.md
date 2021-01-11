@@ -10,7 +10,7 @@ The goals are as stated:
 Tradeoffs: If it comes to it, I'm somewhat of a germaphobe with code, so clean will mostly win over, unless it's an order of magnitude difference in performance, and puts the application at risk.    
 
 # Important Notes
-Relies on Java 8+ API's
+Relies on Java 8+ API's.
 
 # Quick Setup
 You can install the jar (from the releases page) or install it from maven/gradle.
