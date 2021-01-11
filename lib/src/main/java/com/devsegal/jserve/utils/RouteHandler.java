@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import com.devsegal.jserve.*;
 
 public class RouteHandler {
-    public static BiConsumer<RequestParser, ResponseStream> createDefaultHandlerForPath(Path pathToAssetFile, FileMIMETypeStore fileTypes) {
+    public static BiConsumer<RequestParser, ResponseStream> createDefaultHandlerForPath(Path pathToAssetFile, FileMIMETypeRegistry fileTypes) {
         String contentType = com.devsegal.jserve.utils.Path.getContentType(pathToAssetFile, fileTypes);
 
         // If there exists a content type that matches this asset file

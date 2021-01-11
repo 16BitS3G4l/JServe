@@ -1,6 +1,6 @@
 package com.devsegal.jserve.utils;
 
-import com.devsegal.jserve.FileMIMETypeStore;
+import com.devsegal.jserve.FileMIMETypeRegistry;
 
 public class Path {
     public static boolean pathIsDirectory(java.nio.file.Path path) {
@@ -36,7 +36,7 @@ public class Path {
         }
     }
 
-    public static String getContentType(java.nio.file.Path path, FileMIMETypeStore fileTypes) {
+    public static String getContentType(java.nio.file.Path path, FileMIMETypeRegistry fileTypes) {
         String fileName = getFileName(path);
         String fileExtension = getFileExtension(fileName);
 

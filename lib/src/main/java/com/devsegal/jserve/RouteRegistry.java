@@ -11,9 +11,9 @@ import java.util.stream.Stream;
 
 public class RouteRegistry {
     private HashMap<String, BiConsumer<RequestParser, ResponseStream>> routeToHandler;
-    private FileMIMETypeStore fileTypes;
+    private FileMIMETypeRegistry fileTypes;
 
-    public RouteRegistry(FileMIMETypeStore fileTypes) {
+    public RouteRegistry(FileMIMETypeRegistry fileTypes) {
         routeToHandler = new HashMap<>();
         this.fileTypes = fileTypes;
     }

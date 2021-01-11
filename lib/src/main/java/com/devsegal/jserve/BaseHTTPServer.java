@@ -15,7 +15,7 @@ public class BaseHTTPServer implements Runnable {
     private Path properties;
     private BiConsumer<RequestParser, ResponseStream> notFoundPageHandler;
     private RouteRegistry routes;
-    private FileMIMETypeStore fileTypes;
+    private FileMIMETypeRegistry fileTypes;
 
     /**
      * @param port the port the server will listen on.
@@ -24,7 +24,7 @@ public class BaseHTTPServer implements Runnable {
         this.port = port;
 
         try {
-            fileTypes = new FileMIMETypeStore();
+            fileTypes = new FileMIMETypeRegistry();
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -36,7 +36,7 @@ public class BaseHTTPServer implements Runnable {
         this.port = port;
 
         try {
-            fileTypes = new FileMIMETypeStore(properties);
+            fileTypes = new FileMIMETypeRegistry(properties);
         } catch(IOException e) {
             e.printStackTrace();
         }
