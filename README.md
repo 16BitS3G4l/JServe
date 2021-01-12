@@ -3,10 +3,14 @@
 An HTTP 1.1 Web Server built with Java. 
 
 # Goals
-The major focuses are providing a framework that serves the general usage of a web server (with good performance in mind), and maintains a clean/readable codebase. If it comes to it, I'm somewhat of a germaphobe with code, so clean will mostly win over, unless it's an order of magnitude difference in performance, and puts the application at risk.    
+The goals are as stated: 
+- Providing a framework that serves the general usage of a web server (with good performance in mind).
+- Maintaining a clean/readable codebase. 
+
+Tradeoffs: If it comes to it, I'm somewhat of a germaphobe with code, so clean will mostly win over, unless it's an order of magnitude difference in performance, and puts the application at risk.    
 
 # Important Notes
-Relies on Java 8+ API's
+Relies on Java 8+ API's.
 
 # Quick Setup
 You can install the jar (from the releases page) or install it from maven/gradle.
@@ -74,21 +78,9 @@ server.route("/login", "POST", (request, response) -> {
   // ...
 });
 ```
+## Changelog
+The changelog has been moved to [its own file](https://github.com/dev-segal/JServe/blob/master/changelog.md)
 
-## Most Recent Changes (Changelog)
-_Refactored the framework by abstraction. Abstracted out concepts like Route handling into a registry of sorts, as well as a MIMEType store._
-
-
-_Introduced a new exception for cases of a Null response status, and added unit testing to facilitate better code practices, and code quality._
-
-
-_Replace ambiguous interfaces for Predicates, Consumers, etc... (if necessary and enough evidence is present to indicate negligent practices/code)_
-- FilterData (resolved by introducing a Predicate<String> lineRejectable)
-- NotFoundPageHandler (resolved by introducing a BiConsumer<RequestParser, ResponseWriter> notFoundPageHandler)
-- Response 
-- TransformPath (resolved by introducing a Function<Path, Path> translatePath) 
-- WebRouteHandler (resolved by introducing a BiConsumer<RequestParser, ResponseWriter> webRouteHandler)
-  
 ## To-Do List
 (soon to be) 
 - (**in progress**) Unit Testing (integration testing will be a future consideration, but at the very least I'd like to create an extensive suite of unit tests)
