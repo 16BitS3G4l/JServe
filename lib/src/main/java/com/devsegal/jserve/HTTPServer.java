@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.function.BiConsumer;
 import java.nio.file.Path;
 
-public class HTTPServer implements Runnable {
+public class HTTPServer implements Runnable, Serverable {
     private int port = 80;
     private boolean isStopped = false;
 
