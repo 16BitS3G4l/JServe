@@ -28,7 +28,7 @@ public class TestHTTPServer {
     }
 
     @Test
-    public void testRunDoesNotStartServerAgainAfterStopping() {
+    public void testRunDoesNotStartServerAgainAfterStopped() {
         MockHTTPServer mockServer = new MockHTTPServer();
 
         new Thread(() -> {
