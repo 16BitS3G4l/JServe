@@ -88,6 +88,7 @@ The changelog has been moved to [its own file](https://github.com/dev-segal/JSer
 - (**done!**) <s>Serve (by default) binary files instead of ASCII encoded text files - so people can serve images, videos, and other file formats.</s>
 
 (at some point in the future) 
+1. Release to repositories like Maven Central, so people can easily work with it using Gradle, Maven, and other dependency management software.
 1. Introduce middleware - so people can extend it more easily than editing source code itself. 
 2. Support/Compatibility for Android 
 3. Add logging instead of intrusive and unwelcomed stdout message clogging 
