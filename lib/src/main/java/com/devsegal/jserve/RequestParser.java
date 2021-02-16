@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class RequestParser {
@@ -13,25 +12,27 @@ public class RequestParser {
     private String httpVersion = "";
     private BufferedReader reader; 
     private HashMap<String, String> postData;
+    private HashMap<String, String> parameters;
     private HashMap<String, String> headers;
 
     public RequestParser(BufferedReader reader) {
         this.reader = reader;
-        postData = new HashMap<String, String>();
+        postData = new HashMap<>();
+        parameters = new HashMap<>();
         headers = new HashMap<>();
     }
 
     public void parseRequest() {
-        parseFirstLine();
+        parseRequestLine();
     
         if(method.equals("GET")) {
-            parseContentAfterFirstLineForGetRequest();
+            processGetRequest();
         } else if(method.equals("POST")) {
-            parseContentAfterFirstLineForPostRequest();
+            processPostRequest();
         }
     }
 
-    public void parseFirstLine() {
+    public void parseRequestLine() {
         try {
 
             boolean waitingForInformation = true;
@@ -39,12 +40,34 @@ public class RequestParser {
             while(waitingForInformation) {
                 if(reader.ready()) {
                     waitingForInformation = false;
+                    
+                    String[] splitRequestLine = reader.readLine().split(" ");
 
-                    String[] firstLine = reader.readLine().split(" "); 
+                    method = splitRequestLine[0];
+                    path = splitRequestLine[1];
 
-                    method = firstLine[0];
-                    path = firstLine[1];
-                    httpVersion = firstLine[2];
+                    System.out.println(path);
+
+                    // Path should really be path up till the ?, and then the parameters should be set from there
+                    int startingIndexOfParameters = path.indexOf("?") + 1;
+
+                    // If it does exist (after 1 added to the -1 returned when it is not found)
+                    if(!(startingIndexOfParameters == 0)) {
+
+                        String[] parameterPairs = path.substring(startingIndexOfParameters).split("&");
+
+                        for(String parameterPair : parameterPairs) {
+                            String[] splitParameter = parameterPair.split("=");
+
+                            parameters.put(splitParameter[0], splitParameter[1]);
+                        }
+
+                        // Remove the parameters from the path
+                        path = path.substring(0, startingIndexOfParameters - 1);
+                    }
+
+
+                    httpVersion = splitRequestLine[2];
                 }
             }
 
@@ -53,11 +76,11 @@ public class RequestParser {
         }
     }
     
-    public void parseContentAfterFirstLineForGetRequest() {
+    public void processGetRequest() {
         readContent(line -> false);
     }
 
-    public void parseContentAfterFirstLineForPostRequest() {
+    public void processPostRequest() {
         readContent(line -> parseRequestLineForSignsOfPostData(line));
     }
     
@@ -65,7 +88,7 @@ public class RequestParser {
         try {
             while(reader.ready()) {
                 String line = reader.readLine();
-                
+
                 // If we find a reason to reject/stop reading content, then stop reading content 
                 if(lineRejectable.test(line)) {
                     break; 
@@ -137,6 +160,10 @@ public class RequestParser {
 
     public HashMap<String, String> getPostData() {
         return postData;
+    }
+
+    public HashMap<String, String> getParameters() {
+        return parameters;
     }
 
     public HashMap<String, String> getHeaders() {
