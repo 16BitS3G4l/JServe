@@ -17,7 +17,7 @@ You can install the jar (from the releases page) or install it from maven/gradle
 More information will be available soon on this process. 
 
 # Examples 
-## Simple Server (basic GET request demonstration)
+## Demonstration of GET request handling
 ```java
 import com.devsegal.jserve.HTTPServer;
 import com.devsegal.jserve.ResponseHeaders;
@@ -40,7 +40,7 @@ server.route("/", "GET", (request, response) -> {
 server.run(); 
 ```
 
-## Utilizing Post requests (with a login page)
+## Demonstration of POST request handling
 ```java
 import com.devsegal.jserve.HTTPServer;
 import com.devsegal.jserve.ResponseHeaders;
