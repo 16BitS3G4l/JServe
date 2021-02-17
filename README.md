@@ -84,8 +84,14 @@ The changelog has been moved to [its own file](https://github.com/dev-segal/JSer
 
 ## To-Do List
 (soon to be) 
-- (**in progress**) Unit Testing (integration testing will be a future consideration, but at the very least I'd like to create an extensive suite of unit tests)
-- (**in progress**) Thorough Javadoc Documentation (extensively, at a minimum covering BaseHTTPServer, and hopefully the rest of the server) 
+- (**done**) <s>Unit Testing (integration testing will be a future consideration, but at the very least I'd like to create an extensive suite of unit tests)</s>
+
+This is way too subjective. It was more of a motivational, go-get-started kind of reminder, than a fixed point which I was aiming for (what is extensive? do we measure that by number of unit tests? do we assess each one?) 
+
+- (**done**) <s> Thorough Javadoc Documentation (extensively, at a minimum covering BaseHTTPServer, and hopefully the rest of the server) </s> 
+
+This is also way too subjective. Definitely a way to get started doing it (which did end up happening), so I'll consider it's mission accomplished, and in the future come up with very very specific metrics to easily measure how much progress has been made in each of these tasks. 
+
 - (**done!**) <s>Serve (by default) binary files instead of ASCII encoded text files - so people can serve images, videos, and other file formats.</s>
 
 (at some point in the future) 
