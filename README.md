@@ -87,6 +87,8 @@ The changelog has been moved to [its own file](https://github.com/dev-segal/JSer
 
 - (**not working on**) Make importing the library as easy as using respositories like Maven Central (in gradle/maven). For some reason, this is something that somehow keeps getting me annoyed - after reading many many tutorials. I've determined the best way to proceed is just to accept it, and read directly from Maven's site on the process. 
 
+- (**not working on**) Resolve the issue with the public asset folder's structure. What JServe currently does is like flattening a list of lists (basically putting the lists (in the list) elements in the original list, thus "flattening" the list into one list, rather than a list of lists. Now, replace the idea of lists with directories, and a list with a root directory, and suddenly it's very analogous. 
+ 
 - (**done**) <s>Unit Testing (integration testing will be a future consideration, but at the very least I'd like to create an extensive suite of unit tests)</s>
 
 This is way too subjective. It was more of a motivational, go-get-started kind of reminder, than a fixed point which I was aiming for (what is extensive? do we measure that by number of unit tests? do we assess each one?) 
