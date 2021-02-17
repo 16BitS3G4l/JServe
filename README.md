@@ -78,6 +78,7 @@ server.route("/login", "POST", (request, response) -> {
   // ...
 });
 ```
+
 ## Changelog
 The changelog has been moved to [its own file](https://github.com/dev-segal/JServe/blob/master/changelog.md)
 
@@ -92,3 +93,6 @@ The changelog has been moved to [its own file](https://github.com/dev-segal/JSer
 2. Introduce middleware - so people can extend it more easily than editing source code itself. 
 3. Support/Compatibility for Android 
 4. Add logging instead of intrusive and unwelcomed stdout message clogging 
+
+## Help Out
+Giving a helping hand to an open source project is really easy, however intimidating it might be (which it shouldn't!). There are tons of stuff to be done - namely features, fixes (even identifying bugs and opening issues), and helping sustain the project's goals/vision. You're encouraged to make/suggest changes in the code/documentation, mess around with things, and try stuff out. The main things to be done (as I see them) are listed in the To-Do section. I'm not really tied to the ordering of it, (thus warranting the use of an unordered list), but they're the most direct conflicts between the project's current state, and where I want it to go. Changes that might seem minute (like improving the writing of READMEs or improving a comment - which isn't really minute, but that's tangential...) are very important to the project's health.
