@@ -82,8 +82,11 @@ server.route("/login", "POST", (request, response) -> {
 ## Changelog
 The changelog has been moved to [its own file](https://github.com/dev-segal/JServe/blob/master/changelog.md)
 
-## To-Do List
-(soon to be) 
+## To-Do List (everything that needs to be done to merit a new release)
+- (**in progress**) Introduce middleware at some level. This might be as simple as creating hooks, so middleware "plug-ins" could be activated at certain places in code. Or, they could be more complex creatures with lifecycles and such things as I've imagined... We'll have to see what makes sense. 
+
+- (**not working on**) Make importing the library as easy as using respositories like Maven Central (in gradle/maven). For some reason, this is something that somehow keeps getting me annoyed - after reading many many tutorials. I've determined the best way to proceed is just to accept it, and read directly from Maven's site on the process. 
+
 - (**done**) <s>Unit Testing (integration testing will be a future consideration, but at the very least I'd like to create an extensive suite of unit tests)</s>
 
 This is way too subjective. It was more of a motivational, go-get-started kind of reminder, than a fixed point which I was aiming for (what is extensive? do we measure that by number of unit tests? do we assess each one?) 
@@ -93,12 +96,9 @@ This is way too subjective. It was more of a motivational, go-get-started kind o
 This is also way too subjective. Definitely a way to get started doing it (which did end up happening), so I'll consider it's mission accomplished, and in the future come up with very very specific metrics to easily measure how much progress has been made in each of these tasks. 
 
 - (**done!**) <s>Serve (by default) binary files instead of ASCII encoded text files - so people can serve images, videos, and other file formats.</s>
-
-(at some point in the future) 
-1. Release to repositories like Maven Central, so people can easily work with it using Gradle, Maven, and other dependency management software.
-2. Introduce middleware - so people can extend it more easily than editing source code itself. 
-3. Support/Compatibility for Android 
-4. Add logging instead of intrusive and unwelcomed stdout message clogging 
+ 
+1. Support/Compatibility for Android 
+2. Add logging instead of intrusive and unwelcomed stdout message clogging 
 
 ## Help Out
 Giving a helping hand to an open source project is really easy, however intimidating it might be (which it shouldn't!). There are tons of stuff to be done - namely features, fixes (even identifying bugs and opening issues), and helping sustain the project's goals/vision. You're encouraged to make/suggest changes in the code/documentation, mess around with things, and try stuff out. The main things to be done (as I see them) are listed in the To-Do section. I'm not really tied to the ordering of it, (thus warranting the use of an unordered list), but they're the most direct conflicts between the project's current state, and where I want it to go. Changes that might seem minute (like improving the writing of READMEs or improving a comment - which isn't really minute, but that's tangential...) are very important to the project's health.
