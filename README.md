@@ -97,7 +97,8 @@ This is also way too subjective. Definitely a way to get started doing it (which
 
 - (**done!**) <s>Serve (by default) binary files instead of ASCII encoded text files - so people can serve images, videos, and other file formats.</s>
  
-1. Support/Compatibility for Android 
+The following are tasks that could be done now, but could also be pushed off to later versions depending on the mood. 
+1. Support/Compatibility for Android
 2. Add logging instead of intrusive and unwelcomed stdout message clogging 
 
 ## Help Out
