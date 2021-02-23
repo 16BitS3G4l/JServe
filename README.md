@@ -1,6 +1,6 @@
 # JServe <img src="https://i.ibb.co/3RKzGsw/Adobe-Stock-389747989.jpg" height="55" />
 
-An HTTP 1.1 Web Server built with Java. 
+A Java framework for building web applications (using a built-in HTTP 1.1 compliant server). 
 
 ## Goals
 The goals are as stated: 
