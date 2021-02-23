@@ -32,13 +32,18 @@ public class RouteRegistry {
     }
 
     private String generateRouteFromAsset(Path asset, String prefix) {
-            return prefix + "/" + com.devsegal.jserve.utils.Path.getFileName(asset);
+        if(!prefix.equals(""))
+            return prefix + "/" + asset;
+        else
+            return asset.toString();
     }
 
-    private void registerAssetFileAsRoute(Path asset, String assetFolderPrefix) {
-        if(!com.devsegal.jserve.utils.Path.pathIsDirectory(asset)) {
-            registerRoute(generateRouteFromAsset(asset, assetFolderPrefix), "GET", RouteHandler.createDefaultHandlerForPath(asset, fileTypes));
-        }
+    private void registerAssetFileAsRoute(Path asset, Path virtualAsset, String assetFolderPrefix) {
+        registerRoute(
+                generateRouteFromAsset(virtualAsset, assetFolderPrefix),
+                "GET",
+                RouteHandler.createDefaultHandlerForPath(asset, fileTypes)
+        );
     }
 
     /**
@@ -50,9 +55,19 @@ public class RouteRegistry {
         Stream<Path> publicAssets = null;
 
         try {
-            
             publicAssets = Files.walk(assetFolder);
-            publicAssets.forEach(asset -> registerAssetFileAsRoute(asset, assetFolderPrefix));
+            publicAssets.forEach(asset -> {
+
+                if(!com.devsegal.jserve.utils.Path.pathIsDirectory(asset)) {
+
+
+                    Path publicAsset = assetFolder.relativize(asset);
+
+                    System.out.println(assetFolderPrefix + "/" + publicAsset);
+
+                    registerAssetFileAsRoute(asset, publicAsset, assetFolderPrefix);
+                }
+            });
 
         } catch(IOException e) {
             e.printStackTrace();
