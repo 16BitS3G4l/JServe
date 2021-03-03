@@ -3,6 +3,14 @@ It should be noted this changelog is miniscule and random in it's tracking. It's
 
 Anyway....
 
+
+_Introduced middleware capabilities._
+This is a major functionality point I wanted to introduce since the beginning, and now it's here - with limited power as of now. 
+Any middleware can create event handlers for 3 events (as of now):
+1. HTTP-REQUEST-RECEIVED (An http request has been received. Before anything is done to process it, this event offers middleware to do anything they'd like)
+2. HTTP-RESPONSE-READY (An http response has been crafted based on the request, but the server hasn't sent it off yet)
+3. HTTP-RESPONSE-SENT (The http response which was prepared has now been sent, any cleaning up should probably be done here)
+
 _Renamed FileMIMETypeStore to FileMIMETypeRegistry. The ambiguity can definitely throw someone off._
 
 _Refactored the framework by abstraction. Abstracted out concepts like Route handling into a registry of sorts, as well as a MIMEType store._
