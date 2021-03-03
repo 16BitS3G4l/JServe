@@ -1,5 +1,8 @@
 package com.devsegal.jserve;
 
+import com.devsegal.jserve.middleware.EventHandler;
+import com.devsegal.jserve.middleware.Middleware;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,6 +19,7 @@ public class HTTPServer implements Runnable, Serverable {
     private BiConsumer<RequestParser, ResponseStream> notFoundPageHandler;
     private RouteRegistry routes;
     private FileMIMETypeRegistry fileTypes;
+    private EventHandlerRegistry eventHandlers;
 
     /**
      * @param port the port the server will listen on.
@@ -30,6 +34,7 @@ public class HTTPServer implements Runnable, Serverable {
         }
 
         routes = new RouteRegistry(fileTypes);
+        eventHandlers = new EventHandlerRegistry();
     }
 
     public HTTPServer(int port, Path properties) {
@@ -42,6 +47,13 @@ public class HTTPServer implements Runnable, Serverable {
         }
 
         routes = new RouteRegistry(fileTypes);
+        eventHandlers = new EventHandlerRegistry();
+    }
+
+    public void loadMiddleware(Middleware middleware) {
+        for(EventHandler eventHandler : middleware.getEventHandlers()) {
+                eventHandlers.registerEventHandler(eventHandler.getEventType(), eventHandler);
+        }
     }
 
     public void setupOriginalServerPath(Path path) {
@@ -95,9 +107,24 @@ public class HTTPServer implements Runnable, Serverable {
                 Socket connection = server.accept();
                 
                 if(originalServerPath != null) {
-                    (new Thread(new ConnectionHandler( new ConnectionHandlerConfiguration(connection, routes, originalServerPath, notFoundPageHandler) ))).start();
+                    ConnectionHandlerConfiguration connectionHandlerConfiguration = new ConnectionHandlerConfiguration();
+
+                    connectionHandlerConfiguration.setConnection(connection);
+                    connectionHandlerConfiguration.setRoutes(routes);
+                    connectionHandlerConfiguration.setOriginalServerPath(originalServerPath);
+                    connectionHandlerConfiguration.setNotFoundPageHandler(notFoundPageHandler);
+                    connectionHandlerConfiguration.setEventHandlers(eventHandlers);
+
+                    (new Thread(new ConnectionHandler( connectionHandlerConfiguration ))).start();
                 } else {
-                    (new Thread(new ConnectionHandler( new ConnectionHandlerConfiguration(connection, routes, notFoundPageHandler) ))).start();
+                    ConnectionHandlerConfiguration connectionHandlerConfiguration = new ConnectionHandlerConfiguration();
+
+                    connectionHandlerConfiguration.setConnection(connection);
+                    connectionHandlerConfiguration.setRoutes(routes);
+                    connectionHandlerConfiguration.setNotFoundPageHandler(notFoundPageHandler);
+                    connectionHandlerConfiguration.setEventHandlers(eventHandlers);
+
+                    (new Thread(new ConnectionHandler( connectionHandlerConfiguration ))).start();
                 }    
             }			
         } catch(IOException e) {
