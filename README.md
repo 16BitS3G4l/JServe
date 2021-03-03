@@ -83,7 +83,7 @@ server.route("/login", "POST", (request, response) -> {
 The changelog has been moved to [its own file](https://github.com/dev-segal/JServe/blob/master/changelog.md)
 
 ## To-Do List (everything that needs to be done to merit a new release)
-- (**in progress**) Introduce middleware at some level. This might be as simple as creating hooks, so middleware "plug-ins" could be activated at certain places in code. Or, they could be more complex creatures with lifecycles and such things as I've imagined... We'll have to see what makes sense. 
+- (**done**) <s>Introduce middleware at some level. This might be as simple as creating hooks, so middleware "plug-ins" could be activated at certain places in code. Or, they could be more complex creatures with lifecycles and such things as I've imagined... We'll have to see what makes sense.</s>
 
 - (**not working on**) Make importing the library as easy as using respositories like Maven Central (in gradle/maven). For some reason, this is something that somehow keeps getting me annoyed - after reading many many tutorials. I've determined the best way to proceed is just to accept it, and read directly from Maven's site on the process. 
 
