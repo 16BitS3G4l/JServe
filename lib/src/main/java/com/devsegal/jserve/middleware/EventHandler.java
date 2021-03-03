@@ -1,6 +1,9 @@
 package com.devsegal.jserve.middleware;
 
-public abstract class EventHandler {
-    public abstract String getEventType();
-    public abstract void action(Object data);
+import com.devsegal.jserve.RequestParser;
+import com.devsegal.jserve.ResponseStream;
+
+public interface EventHandler {
+    String getEventType();
+    void action(RequestParser request, ResponseStream response);
 }
