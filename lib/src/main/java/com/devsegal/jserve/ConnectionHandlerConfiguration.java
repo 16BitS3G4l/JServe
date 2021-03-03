@@ -1,5 +1,7 @@
 package com.devsegal.jserve;
 
+import com.devsegal.jserve.middleware.EventHandler;
+
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
@@ -10,6 +12,11 @@ public class ConnectionHandlerConfiguration {
     private RouteRegistry routes;
     private Path originalServerPath;
     private BiConsumer<RequestParser, ResponseStream> notFoundPageHandler;
+    private EventHandlerRegistry eventHandlers;
+
+    public ConnectionHandlerConfiguration() {
+
+    }
 
     public ConnectionHandlerConfiguration(Socket connection, RouteRegistry routes) {
         this.connection = connection;
@@ -30,6 +37,30 @@ public class ConnectionHandlerConfiguration {
     public ConnectionHandlerConfiguration(Socket connection, RouteRegistry routes, Path originalServerPath, BiConsumer<RequestParser, ResponseStream> notFoundPageHandler) {
         this(connection, routes, originalServerPath);
         this.notFoundPageHandler = notFoundPageHandler;
+    }
+
+    public void setNotFoundPageHandler(BiConsumer<RequestParser, ResponseStream> notFoundPageHandler) {
+        this.notFoundPageHandler = notFoundPageHandler;
+    }
+
+    public void setOriginalServerPath(Path originalServerPath) {
+        this.originalServerPath = originalServerPath;
+    }
+
+    public void setConnection(Socket connection) {
+        this.connection = connection;
+    }
+
+    public void setRoutes(RouteRegistry routes) {
+        this.routes = routes;
+    }
+
+    public void setEventHandlers(EventHandlerRegistry eventHandlers) {
+        this.eventHandlers = eventHandlers;
+    }
+
+    public EventHandlerRegistry getEventHandlers() {
+        return eventHandlers;
     }
 
     public Socket getConnection() {
