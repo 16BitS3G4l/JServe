@@ -3,6 +3,7 @@ It should be noted this changelog is miniscule and random in it's tracking. It's
 
 Anyway....
 
+[March 3rd, 2021] As of now, the only goal left to fulfill before a new major release is to provide easy access to the library on Maven Central, and through dependency management software like maven and gradle. I will probably have to rename the packaging just because of the requirements with ossrh hosting (com.github.jserve) or something similar. 
 
 _Introduced middleware capabilities._
 This is a major functionality point I wanted to introduce since the beginning, and now it's here - with limited power as of now. 
