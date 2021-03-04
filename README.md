@@ -85,7 +85,7 @@ The changelog has been moved to [its own file](https://github.com/dev-segal/JSer
 ## To-Do List (everything that needs to be done to merit a new release)
 - (**done**) <s>Introduce middleware at some level. This might be as simple as creating hooks, so middleware "plug-ins" could be activated at certain places in code. Or, they could be more complex creatures with lifecycles and such things as I've imagined... We'll have to see what makes sense.</s>
 
-- (**not working on**) Make importing the library as easy as using respositories like Maven Central (in gradle/maven). For some reason, this is something that somehow keeps getting me annoyed - after reading many many tutorials. I've determined the best way to proceed is just to accept it, and read directly from Maven's site on the process. 
+- (**currently in progress**) Make importing the library as easy as using respositories like Maven Central (in gradle/maven). For some reason, this is something that somehow keeps getting me annoyed - after reading many many tutorials. I've determined the best way to proceed is just to accept it, and read directly from Maven's site on the process. 
 
 - (**done**) <s>Resolve the issue with the public asset folder's structure. What JServe currently does is like flattening a list of lists (basically putting the lists (in the list) elements in the original list, thus "flattening" the list into one list, rather than a list of lists. Now, replace the idea of lists with directories, and a list with a root directory, and suddenly it's very analogous.</s> 
  
