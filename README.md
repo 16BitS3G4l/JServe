@@ -22,8 +22,7 @@ More information will be available soon on this process.
 import com.devsegal.jserve.HTTPServer;
 import com.devsegal.jserve.ResponseHeaders;
 
-//... your other code
-HTTPServer server = new HTTPServer(8080); // port
+HTTPServer server = new HTTPServer(8080);
 
 server.route("/", "GET", (request, response) -> {
 
